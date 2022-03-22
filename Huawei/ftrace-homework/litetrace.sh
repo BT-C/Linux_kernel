@@ -16,6 +16,7 @@ do
 			echo "$OPTARG" > current_tracer
 			echo 1 > tracing_on;;
 		f)
+			echo > set_ftrace_filter
 			echo 0 > tracing_on
 			echo > set_ftrace_filter
 			echo $OPTARG > set_ftrace_filter
