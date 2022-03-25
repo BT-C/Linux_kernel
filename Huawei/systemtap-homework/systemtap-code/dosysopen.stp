@@ -4,12 +4,28 @@ probe begin
     log("begin to probe")
 }
 
+function printInfo(filename, parms){
+	#printf("%s\n%s\n", kernel_string(filename), parms);
+    printf("%s(%d) call do_sys_open (%s)\n",execname(),pid(),kernel_string(filename))
+	printf("parms (%s)\n",parms);
+	print_backtrace();
+}
+
 probe kernel.function("do_sys_open").call
 {
-    printf("input pid : %s\n", @1);  
-    printf("%s(%d) call do_sys_open (%s)\n",execname(),pid(),kernel_string($filename))
-	printf("parms (%s)\n",$$parms)
-    print_backtrace()
+    #printf("input pid : %s, %s\n", @1, @2);  
+	if (@1 == "n"){
+		if (execname() == @2){
+			printInfo($filename, $$parms);
+		}
+	}else if(@1 == "p"){
+		if (pid() == #2){
+			printInfo($filename, $$parms);
+		}
+	}else{
+		printf("error parameters!\n");
+	}
+
 }
 
 probe timer.ms(10000) # after 1 seconds

@@ -1,5 +1,5 @@
 main:testFileOperate.o FileOperate.o
-	g++ testFileOperate.o FileOperate.o -o cbt_file_operate
+	g++ testFileOperate.o FileOperate.o -o cbt_file_operating1234
 
 FileOperate.o:FileOperate.cpp FileOperate.h
 	g++ -c FileOperate.cpp -o FilerOperate.o
