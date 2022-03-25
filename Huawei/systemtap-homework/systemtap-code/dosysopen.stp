@@ -1,0 +1,28 @@
+#!/usr/bin/stap
+probe begin 
+{
+    log("begin to probe")
+}
+
+probe kernel.function("do_sys_open").call
+{
+    printf("input pid : %s\n", @1);  
+    printf("%s(%d) call do_sys_open (%s)\n",execname(),pid(),kernel_string($filename))
+	printf("parms (%s)\n",$$parms)
+    print_backtrace()
+}
+
+probe timer.ms(10000) # after 1 seconds
+{
+    exit ()
+}
+
+probe end
+{
+    log("end to probe")
+}
+
+
+# stap -vL 'kernel.function("do_sys_open")'
+# stap -kve 'probe kernel.function("vfs_write") {log("hello") exit() }'
+# stap -kve 'probe kernel.function("vfs_open") {printf ("%s(%d)\n", execname(), pid());print_backtrace();exit(); }'

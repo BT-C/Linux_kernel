@@ -1,0 +1,30 @@
+#!/usr/bin/stap
+probe begin {
+    printf("=============begin============\n")
+}
+# /lib/x86_64-linux-gnu/ld-2.27.so
+#probe process("/usr/lib/x86_64-linux-gnu/libc.so.6").function("malloc").call {
+#    printf("%s pid=%d malloc(%s) 0x%x\r\n", execname(), pid(), $$parms, $bytes)
+#    print_ubacktrace()
+#}
+
+probe process("/lib/x86_64-linux-gnu/libc.so.6").function("malloc").call {
+ #   printf("%s pid=%d malloc(%s) 0x%x\r\n", execname(), pid(), $$parms, $bytes)
+ #   print_ubacktrace()
+}
+
+probe process("/lib/x86_64-linux-gnu/libc.so.6").function("malloc").return {
+    if (pid() == 13835)
+    printf("return : [0x%x]\n",$return);
+}
+
+probe timer.ms(100000)#500ms later
+{
+    log("probe exit")
+    exit()
+}
+
+probe end {
+    printf("=============end============\n")
+}
+# stap -vL 'process("/usr/lib/x86_64-linux-gnu/libc.so.6").function("malloc")'
