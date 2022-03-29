@@ -1,43 +1,53 @@
 #!/usr/bin/stap
 
-global id_array
+global address_flag
+global address_stack
+
 probe begin {
     printf("=============begin============\n")
 }
 
-probe process("/lib/x86_64-linux-gnu/libc.so.6").function("malloc").call {
- #   printf("%s pid=%d malloc(%s) 0x%x\r\n", execname(), pid(), $$parms, $bytes)
- #   print_ubacktrace()
-}
-
 probe process("/lib/x86_64-linux-gnu/libc.so.6").function("malloc").return {
-	#printf("%d\n", $1);
-
-	id_array[$return] = 1;
-	foreach(i in id_array){
-	#	printf("id_array[%d] = %d\n", i, id_array[i]);	
+	bt = ubacktrace();
+	address_flag[$return] = 1;
+	address_stack[$return] = sprint_ubacktrace();
+	print_ustack(address_stack[$return]);
+	#print_ubacktrace();
+	foreach(i in address_flag){
+		printf("address_flag[0x%x] = %d\n", i, address_flag[i]);	
 	}
-	#printf("----------------------\n");
+	printf("----------------------\n");
 	#delete id_array[$return]
 
-    if (pid() == $1)
-    printf("%s pid=%d return : [0x%x]\n", execname(), pid(), $return);
+	#print_ustack(bt);
+
+ #   if (pid() == $1)
+    #printf("%s pid=%d return : [0x%x]\n", execname(), pid(), $return);
 }
 
 
 probe process("/lib/x86_64-linux-gnu/libc.so.6").function("free").call {
  #   printf("%s pid=%d \n", execname(), pid());
 	#printf("%s %d\n", $$parms->mem, id_array[$$parms->mem]);
-	printf("%d %d\n", $mem, id_array[$mem]);
+	#printf("free %d %d\n", $mem, address_stack[$mem]);
+	if (address_flag[$mem] > 0){
+		delete address_flag[$mem];
+		delete address_stack[$mem];
+	}
 }
 
-probe timer.ms(100000)#500ms later
+probe timer.ms(10000)#500ms later
 {
     log("probe exit")
     exit()
 }
 
 probe end {
+	foreach (i in address_flag){
+		printf("memleak address : [0x%x] \nstack: %s\n", i, address_stack[i]);
+		#print_ustack(address_stack[i]);
+		#print_ustack(address_stack[i]);
+	}
     printf("=============end============\n")
 }
 # stap -vL 'process("/usr/lib/x86_64-linux-gnu/libc.so.6").function("malloc")'
