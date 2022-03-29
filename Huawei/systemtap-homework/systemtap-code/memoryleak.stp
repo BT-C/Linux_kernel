@@ -1,12 +1,9 @@
 #!/usr/bin/stap
+
+global id_array
 probe begin {
     printf("=============begin============\n")
 }
-# /lib/x86_64-linux-gnu/ld-2.27.so
-#probe process("/usr/lib/x86_64-linux-gnu/libc.so.6").function("malloc").call {
-#    printf("%s pid=%d malloc(%s) 0x%x\r\n", execname(), pid(), $$parms, $bytes)
-#    print_ubacktrace()
-#}
 
 probe process("/lib/x86_64-linux-gnu/libc.so.6").function("malloc").call {
  #   printf("%s pid=%d malloc(%s) 0x%x\r\n", execname(), pid(), $$parms, $bytes)
@@ -15,13 +12,21 @@ probe process("/lib/x86_64-linux-gnu/libc.so.6").function("malloc").call {
 
 probe process("/lib/x86_64-linux-gnu/libc.so.6").function("malloc").return {
 	#printf("%d\n", $1);
+
+	id_array[$return] = 1;
+	foreach(i in id_array){
+		printf("id_array[%d] = %d\n", i, id_array[i]);	
+	}
+	printf("----------------------\n");
+	delete id_array[$return]
+
     if (pid() == $1)
     printf("%s pid=%d return : [0x%x]\n", execname(), pid(), $return);
 }
 
 
 probe process("/lib/x86_64-linux-gnu/libc.so.6").function("free").call {
-    printf("%s pid=%d \n", execname(), pid());
+ #   printf("%s pid=%d \n", execname(), pid());
 }
 
 probe timer.ms(100000)#500ms later
