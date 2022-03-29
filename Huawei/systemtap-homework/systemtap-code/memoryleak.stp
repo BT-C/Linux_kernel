@@ -15,10 +15,10 @@ probe process("/lib/x86_64-linux-gnu/libc.so.6").function("malloc").return {
 
 	id_array[$return] = 1;
 	foreach(i in id_array){
-		printf("id_array[%d] = %d\n", i, id_array[i]);	
+	#	printf("id_array[%d] = %d\n", i, id_array[i]);	
 	}
-	printf("----------------------\n");
-	delete id_array[$return]
+	#printf("----------------------\n");
+	#delete id_array[$return]
 
     if (pid() == $1)
     printf("%s pid=%d return : [0x%x]\n", execname(), pid(), $return);
@@ -27,6 +27,8 @@ probe process("/lib/x86_64-linux-gnu/libc.so.6").function("malloc").return {
 
 probe process("/lib/x86_64-linux-gnu/libc.so.6").function("free").call {
  #   printf("%s pid=%d \n", execname(), pid());
+	#printf("%s %d\n", $$parms->mem, id_array[$$parms->mem]);
+	printf("%d %d\n", $mem, id_array[$mem]);
 }
 
 probe timer.ms(100000)#500ms later
