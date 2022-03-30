@@ -10,6 +10,7 @@ int main(){
 		sleep(1);
 
 		int *temp = (int *)malloc(sizeof(int) * length);
+		printf("pid : %d, address : 0x%x\n", getpid(), temp);
 		sleep(2);
 		free(temp);
 		//free(value);
