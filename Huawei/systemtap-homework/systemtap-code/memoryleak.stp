@@ -11,21 +11,14 @@ probe process("/lib/x86_64-linux-gnu/libc.so.6").function("malloc").return {
 	bt = ubacktrace();
 	address_flag[$return] = 1;
 	address_stack[$return] = sprint_ubacktrace();
-	print_ustack(address_stack[$return]);
+	#print_ustack(address_stack[$return]);
 	foreach(i in address_flag){
 		printf("address_flag[0x%x] = %d\n", i, address_flag[i]);	
 	}
 	printf("----------------------\n");
-
-
- #   if (pid() == $1)
-    #printf("%s pid=%d return : [0x%x]\n", execname(), pid(), $return);
 }
 
-
 probe process("/lib/x86_64-linux-gnu/libc.so.6").function("free").call {
- #   printf("%s pid=%d \n", execname(), pid());
-	#printf("%s %d\n", $$parms->mem, id_array[$$parms->mem]);
 	#printf("free %d %d\n", $mem, address_stack[$mem]);
 	if (address_flag[$mem] > 0){
 		delete address_flag[$mem];
@@ -33,7 +26,7 @@ probe process("/lib/x86_64-linux-gnu/libc.so.6").function("free").call {
 	}
 }
 
-probe timer.ms(10000)#500ms later
+probe timer.ms(20000)#500ms later
 {
     log("probe exit")
     exit()
@@ -41,7 +34,7 @@ probe timer.ms(10000)#500ms later
 
 probe end {
 	foreach (i in address_flag){
-		printf("memleak address : [0x%x] \nstack: %s\n", i, address_stack[i]);
+		printf("memleak address : [0x%x] \n memory leak locate in stack: %s\n", i, address_stack[i]);
 	}
     printf("=============end============\n")
 }
