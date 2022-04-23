@@ -5,6 +5,7 @@
 MODULE_LICENSE("Dual BSD/GPL");
 
 struct SLDriverParameters gslDriverParameters = {0};
+atomic_t in_count;
 
 struct file_operations gslNvmDriverFileOperations = 
 {
@@ -85,7 +86,7 @@ void UninitialCharDevice(void)
 static int DriverInitialize(void)
 {
 	DEBUG_PRINT(DEVICE_NAME " Initialize\n");
-
+	atomic_set(&in_count, 0);
 	return InitalizeCharDevice();
 }
 

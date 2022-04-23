@@ -8,6 +8,8 @@
 #include <linux/mm.h>
 #include <linux/cdev.h>
 #include <linux/slab.h>
+#include <asm/atomic.h>
+
 
 #define DEVICE_NAME "msg_printer"
 
@@ -19,5 +21,6 @@ struct SLDriverParameters
 };
 
 extern struct SLDriverParameters gslDriverParameters;
+extern atomic_t in_count;
 
 #endif

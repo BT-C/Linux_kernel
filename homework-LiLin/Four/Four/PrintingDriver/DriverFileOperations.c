@@ -5,11 +5,16 @@
 #include <asm/atomic.h>
 #include <linux/rwsem.h>
 #include <asm/uaccess.h>
+#include <asm/atomic.h>
+
 #include "DriverFileOperations.h"
 #include "DriverMain.h"
 #include "ToolFunctions.h"
 
 DEFINE_PER_CPU(long, gUsage) = 0;
+//unsigned long count = 0;
+//atomic_t count;
+int count_init = 0;
 
 int DriverOpen(struct inode *pslINode, struct file *pslFileStruct)
 {
@@ -86,7 +91,10 @@ ssize_t DriverWrite(struct file *pslFileStruct, const char __user *pBuffer, size
 
 long DriverIOControl(struct file *pslFileStruct, unsigned int uiCmd, unsigned long ulArg)
 {
+	
 	DEBUG_PRINT(DEVICE_NAME ": ioctl invoked, do nothing\n");
+	//atomic_inc(&in_count);
+	//DEBUG_PRINT("%d\n", atomic_read(&in_count));
 	return 0;
 }
 

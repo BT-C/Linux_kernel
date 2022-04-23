@@ -1,6 +1,7 @@
 #ifndef DriverFileOperations_H
 #define DriverFileOperations_H
 
+
 int DriverOpen(struct inode *pslINode, struct file *pslFileStruct);
 
 int DriverClose(struct inode *pslINode, struct file *pslFileStruct);
