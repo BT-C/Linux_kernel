@@ -93,8 +93,8 @@ long DriverIOControl(struct file *pslFileStruct, unsigned int uiCmd, unsigned lo
 {
 	
 	DEBUG_PRINT(DEVICE_NAME ": ioctl invoked, do nothing\n");
-	//atomic_inc(&in_count);
-	//DEBUG_PRINT("%d\n", atomic_read(&in_count));
+	atomic_inc(&in_count);
+	DEBUG_PRINT("%d\n", atomic_read(&in_count));
 	return 0;
 }
 

@@ -44,7 +44,7 @@ int main()
 	if (child_pid == 0)
 	{
 		cout << "child process" << endl;
-		int io_time = 100000;
+		int io_time = 1000000;
 		for (int j = 0; j < io_time; j ++)
 			driverIOCtl();
 	}
