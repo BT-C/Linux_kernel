@@ -93,8 +93,15 @@ long DriverIOControl(struct file *pslFileStruct, unsigned int uiCmd, unsigned lo
 {
 	
 	DEBUG_PRINT(DEVICE_NAME ": ioctl invoked, do nothing\n");
-	atomic_inc(&in_count);
-	DEBUG_PRINT("%d\n", atomic_read(&in_count));
+	//atomic_inc(&in_count);
+	//DEBUG_PRINT("%d\n", atomic_read(&in_count));
+	long *pUsage = NULL;
+	pUsage = this_cpu_ptr((long *)(&gUsage));
+	(*pUsage)++;
+	DEBUG_PRINT("%d\n", &gUsage);
+	
+	DEBUG_PRINT("%d per_cpu_usage : %d", 1, per_cpu(gUsage, 1));
+	//DEBUG_PRINT("%d\n", *pUsage);
 	return 0;
 }
 
