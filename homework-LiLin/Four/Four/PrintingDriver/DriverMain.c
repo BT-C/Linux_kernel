@@ -77,8 +77,8 @@ void UninitialCharDevice(void)
 	int j = 0;
 	for_each_online_cpu(j)
 	{
+		DEBUG_PRINT("%d per_cpu_usage : %d", j, per_cpu(gUsage, j));
 		DEBUG_PRINT(DEVICE_NAME " CPU %d per cpu base = %lx\n", j, __per_cpu_offset[j]);
-	//	DEBUG_PRINT("%d per_cpu_usage : %d", j, per_cpu(gUsage, j));
 	}
 	
 	device_destroy(gslDriverParameters.pslDriverClass, gslDriverParameters.uiDeviceNumber);

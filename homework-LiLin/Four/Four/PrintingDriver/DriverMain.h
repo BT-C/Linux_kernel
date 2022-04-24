@@ -23,4 +23,6 @@ struct SLDriverParameters
 extern struct SLDriverParameters gslDriverParameters;
 extern atomic_t in_count;
 
+extern DEFINE_PER_CPU(long, gUsage);
+
 #endif
