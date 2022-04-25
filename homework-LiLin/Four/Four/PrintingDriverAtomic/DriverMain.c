@@ -74,6 +74,7 @@ CLASS_CREATE_ERROR:
 
 void UninitialCharDevice(void)
 {
+	/*
 	int j = 0;
 	int total_count = 0;
 	for_each_online_cpu(j)
@@ -83,16 +84,22 @@ void UninitialCharDevice(void)
 		DEBUG_PRINT(DEVICE_NAME " CPU %d per cpu base = %lx\n", j, __per_cpu_offset[j]);
 	}
 	DEBUG_PRINT("All count is : %d\n", total_count);
+	*/
+	DEBUG_PRINT("ALL COUNT IS : %d\n", atomic_read(&in_count));
 	
 	device_destroy(gslDriverParameters.pslDriverClass, gslDriverParameters.uiDeviceNumber);
+
 	cdev_del(&(gslDriverParameters.slCharDevice));
+
 	class_destroy(gslDriverParameters.pslDriverClass);
+
 	unregister_chrdev_region(gslDriverParameters.uiDeviceNumber, 1);
 }
 
 static int DriverInitialize(void)
 {
 	DEBUG_PRINT(DEVICE_NAME " Initialize\n");
+	atomic_set(&in_count, 0);
 	return InitalizeCharDevice();
 }
 

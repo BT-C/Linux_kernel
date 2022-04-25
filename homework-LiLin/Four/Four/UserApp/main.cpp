@@ -32,7 +32,7 @@ int driverIOCtl()
 
 int main()
 {
-	int num_proc = 4;
+	int num_proc = 128;
 	int i = 2;
 	pid_t child_pid = fork();
 	while (child_pid != 0 && i <= num_proc)
@@ -43,9 +43,9 @@ int main()
 
 	if (child_pid == 0)
 	{
-		cout << "child process" << endl;
-		//int io_time = 1000000;
-		int io_time = 1;
+	//	cout << "child process" << endl;
+		//int io_time = 40000000;
+		int io_time = 10;
 		for (int j = 0; j < io_time; j ++)
 			driverIOCtl();
 	}
@@ -55,7 +55,7 @@ int main()
 			wait(NULL);
 	}
 
-	cout << child_pid << endl;
+	//cout << child_pid << endl;
 	
 	return 0;
 }
