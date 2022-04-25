@@ -98,12 +98,17 @@ long DriverIOControl(struct file *pslFileStruct, unsigned int uiCmd, unsigned lo
 	long *pUsage = NULL;
 	pUsage = this_cpu_ptr((long *)(&gUsage));
 	//(*pUsage)++;
-	int temp_usage = (*pUsage) + 1;
+	int tempUsage = (*pUsage) + 1;
 	int temp = 0;
 	int i = 0;
 	for (i = 0; i < 1000000000; i ++)
 		temp = 99 * 99;
-	(*pUsage) = temp_usage;
+	long *nowUsage = NULL;
+	nowUsage = this_cpu_ptr((long *)(&gUsage));
+	if (nowUsage != pUsage)
+		DEBUG_PRINT("CPU SHCHEDULE from %ld to %ld\n", pUsage, nowUsage);
+	(*pUsage) = tempUsage;
+	int preemptCount = preempt_count();
 	//DEBUG_PRINT("%d\n", &gUsage);
 	
 	//DEBUG_PRINT("%d per_cpu_usage : %d", 1, per_cpu(gUsage, 1));

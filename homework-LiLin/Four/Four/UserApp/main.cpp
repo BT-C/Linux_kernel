@@ -32,7 +32,7 @@ int driverIOCtl()
 
 int main()
 {
-	int num_proc = 128;
+	int num_proc = 16;
 	int i = 2;
 	pid_t child_pid = fork();
 	while (child_pid != 0 && i <= num_proc)
