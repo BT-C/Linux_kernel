@@ -11,7 +11,7 @@
 using namespace std;
 
 
-int driverIOCtl()
+int driverIOCtl(int len, int pid)
 {
 	int fd = 0;
 	int ret;
@@ -24,7 +24,7 @@ int driverIOCtl()
 		return -1;
 	}
 
-	ioctl(fd, 0, 0);
+	ioctl(fd, len, pid);
 	close(fd);
 
 	return 0;
@@ -32,22 +32,26 @@ int driverIOCtl()
 
 int main()
 {
-	int num_proc = 64;
+	int num_proc = 4;
 	int i = 2;
+	int pid_num = 0;
 	pid_t child_pid = fork();
 	while (child_pid != 0 && i <= num_proc)
 	{
 		i ++;
 		child_pid = fork();
+		pid_num ++ ;
 	}
 
 	if (child_pid == 0)
 	{
-	//	cout << "child process" << endl;
 		//int io_time = 40000000;
-		int io_time = 10;
+		int io_time = 1;
+		if (pid_num + 1 == num_proc)
+			sleep(5);
 		for (int j = 0; j < io_time; j ++)
-			driverIOCtl();
+			driverIOCtl(num_proc, pid_num);
+		printf("pid_num : %d\n", pid_num);
 	}
 	else
 	{	
@@ -55,7 +59,6 @@ int main()
 			wait(NULL);
 	}
 
-	//cout << child_pid << endl;
 	
 	return 0;
 }

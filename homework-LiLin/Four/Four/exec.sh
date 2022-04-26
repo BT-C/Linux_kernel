@@ -1,7 +1,8 @@
 #!/bin/bash
 sudo dmesg -C
 path=$(pwd)
-cd $path/PrintingDriver
+#cd $path/PrintingDriver
+cd $path/PrintingDriverSchedule
 #cd $path/PrintingDriverMutex
 make
 sudo insmod PrintModule.ko
