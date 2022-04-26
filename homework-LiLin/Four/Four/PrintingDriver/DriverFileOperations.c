@@ -109,6 +109,8 @@ long DriverIOControl(struct file *pslFileStruct, unsigned int uiCmd, unsigned lo
 		DEBUG_PRINT("CPU SHCHEDULE from %ld to %ld\n", pUsage, nowUsage);
 	(*pUsage) = tempUsage;
 	int preemptCount = preempt_count();
+	if (preemptCount > 0)
+		DEBUG_PRINT("preemptcount : %d, pUsage : %ld\n", preemptCount, pUsage);
 	//DEBUG_PRINT("%d\n", &gUsage);
 	
 	//DEBUG_PRINT("%d per_cpu_usage : %d", 1, per_cpu(gUsage, 1));
