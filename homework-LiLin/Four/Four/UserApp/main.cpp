@@ -32,7 +32,7 @@ int driverIOCtl(int len, int pid)
 
 int main()
 {
-	int num_proc = 4;
+	int num_proc = 128;
 	int i = 2;
 	int pid_num = 0;
 	pid_t child_pid = fork();
@@ -47,8 +47,8 @@ int main()
 	{
 		//int io_time = 40000000;
 		int io_time = 1;
-		if (pid_num + 1 == num_proc)
-			sleep(5);
+		//if (pid_num + 1 == num_proc)
+			//sleep(5);
 		for (int j = 0; j < io_time; j ++)
 			driverIOCtl(num_proc, pid_num);
 		printf("pid_num : %d\n", pid_num);

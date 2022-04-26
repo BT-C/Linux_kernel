@@ -92,8 +92,6 @@ ssize_t DriverWrite(struct file *pslFileStruct, const char __user *pBuffer, size
 long DriverIOControl(struct file *pslFileStruct, unsigned int uiCmd, unsigned long ulArg)
 {
 	
-	//DEBUG_PRINT(DEVICE_NAME ": ioctl invoked, do nothing\n");
-	//atomic_inc(&in_count);
 	mutex_lock(&mutex);
 	int i = 0;
 	int temp = 0;
@@ -101,14 +99,7 @@ long DriverIOControl(struct file *pslFileStruct, unsigned int uiCmd, unsigned lo
 		temp = 99 * 99;
 	mutex_in_count += 1;
 	mutex_unlock(&mutex);
-	//DEBUG_PRINT("%d\n", atomic_read(&in_count));
-	//long *pUsage = NULL;
-	//pUsage = this_cpu_ptr((long *)(&gUsage));
-	//(*pUsage)++;
-	//DEBUG_PRINT("%d\n", &gUsage);
-	
-	//DEBUG_PRINT("%d per_cpu_usage : %d", 1, per_cpu(gUsage, 1));
-	//DEBUG_PRINT("%d\n", *pUsage);
+
 	return 0;
 }
 

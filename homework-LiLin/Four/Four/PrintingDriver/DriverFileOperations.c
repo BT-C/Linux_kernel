@@ -92,48 +92,13 @@ ssize_t DriverWrite(struct file *pslFileStruct, const char __user *pBuffer, size
 long DriverIOControl(struct file *pslFileStruct, unsigned int len, unsigned long ulArg)
 {
 	
-	//DEBUG_PRINT(DEVICE_NAME ": ioctl invoked, do nothing\n");
-	//atomic_inc(&in_count);
-	//DEBUG_PRINT("%d\n", atomic_read(&in_count));
-	long *pUsage = NULL;
-	pUsage = this_cpu_ptr((long *)(&gUsage));
-	//(*pUsage)++;
-	int tempUsage = (*pUsage) + 1;
 	int temp = 0;
 	int i = 0;
 	for (i = 0; i < 1000000000; i ++)
 		temp = 99 * 99;
-	if (ulArg == 0)
-	{	
-		DEBUG_PRINT("--------------- before pusage : %lx\n", pUsage);
-		DEBUG_PRINT("--------------- chedule\n");
-		old_process = current;
-		set_current_state(TASK_INTERRUPTIBLE);
-		schedule();
-		DEBUG_PRINT("WAKE UP\n");
-		DEBUG_PRINT("--------------- now     pusage : %lx\n", pUsage);
-		DEBUG_PRINT("--------------- current value:%d, before value:%d\n", (*pUsage), tempUsage);
-	}
-	else if(ulArg == len - 1)
-	{
-		wake_up_process(old_process);
-	}
 
-	DEBUG_PRINT("%d process - pusage:%lx\n", ulArg, pUsage);
-	//DEBUG_PRINT("WAKE UP\n");
-	
-	long *nowUsage = NULL;
-	nowUsage = this_cpu_ptr((long *)(&gUsage));
-	if (nowUsage != pUsage)
-		DEBUG_PRINT("CPU SHCHEDULE from %ld to %ld\n", pUsage, nowUsage);
-	(*pUsage) = tempUsage;
-	int preemptCount = preempt_count();
-	if (preemptCount > 0)
-		DEBUG_PRINT("preemptcount : %d, pUsage : %ld\n", preemptCount, pUsage);
-	//DEBUG_PRINT("%d\n", &gUsage);
-	
-	//DEBUG_PRINT("%d per_cpu_usage : %d", 1, per_cpu(gUsage, 1));
-	//DEBUG_PRINT("%d\n", *pUsage);
+	get_cpu_var(gUsage) ++;
+	put_cpu_var(gUsage);
 	return 0;
 }
 
